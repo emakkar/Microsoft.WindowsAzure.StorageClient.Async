@@ -5,6 +5,7 @@ if "%1"=="" (
     EXIT /b 1
 )
 
+setlocal
 SET OUTDIR=%~dp0Microsoft.WindowsAzure.StorageClient.Async\bin\Release
 @echo on
 NuGet.exe pack "%~dp0Microsoft.WindowsAzure.StorageClient.Async\Microsoft.WindowsAzure.StorageClient.Async.csproj" -Properties Configuration=Release -Build -OutputDirectory "%OUTDIR%" -Version %1 -Symbols
