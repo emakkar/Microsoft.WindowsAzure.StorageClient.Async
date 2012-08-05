@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.WindowsAzure.StorageClient.Async", "Microsoft.WindowsAzure.StorageClient.Async\Microsoft.WindowsAzure.StorageClient.Async.csproj", "{C8DAAC3B-9099-4AE9-88F2-CAB920B674C8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.WindowsAzure.StorageClient.AsyncTests", "Microsoft.WindowsAzure.StorageClient.AsyncTests\Microsoft.WindowsAzure.StorageClient.AsyncTests.csproj", "{9E75A0DC-3ECC-4972-8221-B2AE42328BAF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C8DAAC3B-9099-4AE9-88F2-CAB920B674C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8DAAC3B-9099-4AE9-88F2-CAB920B674C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8DAAC3B-9099-4AE9-88F2-CAB920B674C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8DAAC3B-9099-4AE9-88F2-CAB920B674C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E75A0DC-3ECC-4972-8221-B2AE42328BAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E75A0DC-3ECC-4972-8221-B2AE42328BAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E75A0DC-3ECC-4972-8221-B2AE42328BAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E75A0DC-3ECC-4972-8221-B2AE42328BAF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
