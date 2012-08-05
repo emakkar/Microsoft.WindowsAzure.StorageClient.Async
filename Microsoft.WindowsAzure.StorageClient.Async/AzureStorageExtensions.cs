@@ -44,5 +44,33 @@ namespace Microsoft.WindowsAzure.StorageClient {
 				ar => ((Tuple<CloudBlob, Stream>)ar.AsyncState).Item1.EndUploadFromStream(ar),
 				Tuple.Create(blob, stream));
 		}
+
+		public static Task DeleteAsync(this CloudBlob blob) {
+			return Task.Factory.FromAsync(
+				(cb, state) => ((CloudBlob)state).BeginDelete(cb, state),
+				ar => ((CloudBlob)ar.AsyncState).EndDelete(ar),
+				blob);
+		}
+
+		public static Task<bool> DeleteIfExistsAsync(this CloudBlob blob) {
+			return Task.Factory.FromAsync(
+				(cb, state) => ((CloudBlob)state).BeginDeleteIfExists(cb, state),
+				ar => ((CloudBlob)ar.AsyncState).EndDeleteIfExists(ar),
+				blob);
+		}
+
+		public static Task SetMetadataAsync(this CloudBlob blob) {
+			return Task.Factory.FromAsync(
+				(cb, state) => ((CloudBlob)state).BeginSetMetadata(cb, state),
+				ar => ((CloudBlob)ar.AsyncState).EndSetMetadata(ar),
+				blob);
+		}
+
+		public static Task FetchAttributesAsync(this CloudBlob blob) {
+			return Task.Factory.FromAsync(
+				(cb, state) => ((CloudBlob)state).BeginFetchAttributes(cb, state),
+				ar => ((CloudBlob)ar.AsyncState).EndFetchAttributes(ar),
+				blob);
+		}
 	}
 }

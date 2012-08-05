@@ -52,8 +52,36 @@
 			this.blobContainer.ListBlobsSegmentedAsync(1, progress).GetAwaiter().GetResult();
 		}
 
+		[Test]
+		public void DeleteAsync() {
+			var blob = this.CreateTestBlobAsync().Result;
+			blob.DeleteAsync().GetAwaiter().GetResult();
+		}
+
+		[Test]
+		public void DeleteIfExistsAsync() {
+			var blob = this.CreateTestBlobAsync().Result;
+			Assert.That(blob.DeleteIfExistsAsync().GetAwaiter().GetResult(), Is.True);
+			Assert.That(blob.DeleteIfExistsAsync().GetAwaiter().GetResult(), Is.False);
+		}
+
+		[Test]
+		public void SetMetadataAsyncAndFetchAttributesAsync() {
+			var blob = this.CreateTestBlobAsync().Result;
+			blob.Metadata["someKey"] = "someValue";
+			blob.SetMetadataAsync().GetAwaiter().GetResult();
+
+			blob = this.blobContainer.GetBlobReference(blob.Name);
+			blob.FetchAttributesAsync().GetAwaiter().GetResult();
+			Assert.That(blob.Metadata["someKey"], Is.EqualTo("someValue"));
+		}
+
 		private static string GetRandomBlobName() {
-			return "FooBlob";
+			var random = new Random();
+			var buffer = new byte[8];
+			random.NextBytes(buffer);
+			string name = Convert.ToBase64String(buffer);
+			return name;
 		}
 
 		private static void ConfigSetter(string configName, Func<string, bool> configSetter) {
@@ -63,6 +91,15 @@
 			}
 
 			configSetter(value);
+		}
+
+		private async Task<CloudBlob> CreateTestBlobAsync() {
+			const string payload = "Some message";
+			string blobName = GetRandomBlobName();
+			var blob = this.blobContainer.GetBlobReference(blobName);
+			var sourceStream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
+			await blob.UploadFromStreamAsync(sourceStream);
+			return blob;
 		}
 	}
 }
