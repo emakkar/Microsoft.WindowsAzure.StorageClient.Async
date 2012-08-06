@@ -76,6 +76,11 @@
 			Assert.That(blob.Metadata["someKey"], Is.EqualTo("someValue"));
 		}
 
+		[Test]
+		public void SetPermissionsAsync() {
+			this.blobContainer.SetPermissionsAsync(new BlobContainerPermissions()).Wait();
+		}
+
 		private static string GetRandomBlobName() {
 			var random = new Random();
 			var buffer = new byte[8];

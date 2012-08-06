@@ -72,5 +72,12 @@ namespace Microsoft.WindowsAzure.StorageClient {
 				ar => ((CloudBlob)ar.AsyncState).EndFetchAttributes(ar),
 				blob);
 		}
+
+		public static Task SetPermissionsAsync(this CloudBlobContainer container, BlobContainerPermissions permissions, BlobRequestOptions options = null) {
+			return Task.Factory.FromAsync(
+				(cb, state) => container.BeginSetPermissions(permissions, options, cb, state),
+				ar => container.EndSetPermissions(ar),
+				null);
+		}
 	}
 }
