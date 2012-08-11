@@ -5,8 +5,14 @@ if "%1"=="" (
     EXIT /b 1
 )
 
+msbuild "%~dp0Microsoft.WindowsAzure.StorageClient.Async\Microsoft.WindowsAzure.StorageClient.Async.csproj" /v:minimal /p:Configuration=Release
+IF ERRORLEVEL 1 GOTO END
+msbuild "%~dp0Microsoft.WindowsAzure.StorageClient.Async\Microsoft.WindowsAzure.StorageClient.Async.csproj" /v:minimal /p:Configuration=ReleaseNET40
+IF ERRORLEVEL 1 GOTO END
+
 setlocal
 SET OUTDIR=%~dp0Microsoft.WindowsAzure.StorageClient.Async\bin\Release
-@echo on
-NuGet.exe pack "%~dp0Microsoft.WindowsAzure.StorageClient.Async\Microsoft.WindowsAzure.StorageClient.Async.csproj" -Properties Configuration=Release -Build -OutputDirectory "%OUTDIR%" -Version %1 -Symbols
-@echo Package built: "%OUTDIR%Microsoft.WindowsAzure.StorageClient.Async.%1.nupkg"
+NuGet.exe pack "%~dp0Microsoft.WindowsAzure.StorageClient.Async.nuspec" -OutputDirectory "%OUTDIR%" -Version %1 -Symbols
+IF ERRORLEVEL 1 GOTO END
+
+@echo Package built: "%OUTDIR%\Microsoft.WindowsAzure.StorageClient.Async.%1.nupkg"

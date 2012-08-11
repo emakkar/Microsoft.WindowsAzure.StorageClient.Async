@@ -7,8 +7,14 @@
 namespace Microsoft.WindowsAzure.StorageClient {
 	using System;
 	using System.Collections.Generic;
+	using System.Collections.ObjectModel;
 	using System.IO;
 	using System.Threading.Tasks;
+#if NET40
+	using ReadOnlyListOfBlobItem = System.Collections.ObjectModel.ReadOnlyCollection<IListBlobItem>;
+#else
+	using ReadOnlyListOfBlobItem = System.Collections.Generic.IReadOnlyList<IListBlobItem>;
+#endif
 
 	public static class AzureStorageExtensions {
 		public static Task<bool> CreateIfNotExistAsync(this CloudBlobContainer container) {
@@ -18,8 +24,9 @@ namespace Microsoft.WindowsAzure.StorageClient {
 				container);
 		}
 
-		public static async Task ListBlobsSegmentedAsync(this CloudBlobContainer container, int pageSize, IProgress<IEnumerable<IListBlobItem>> progress) {
+		public static async Task<ReadOnlyListOfBlobItem> ListBlobsSegmentedAsync(this CloudBlobContainer container, int pageSize, IProgress<IEnumerable<IListBlobItem>> progress = null) {
 			var options = new BlobRequestOptions { BlobListingDetails = BlobListingDetails.Metadata };
+			var results = new List<IListBlobItem>();
 			ResultContinuation continuation = null;
 			ResultSegment<IListBlobItem> segment;
 			do {
@@ -27,8 +34,32 @@ namespace Microsoft.WindowsAzure.StorageClient {
 					(cb, state) => container.BeginListBlobsSegmented(pageSize, continuation, options, cb, state),
 					ar => container.EndListBlobsSegmented(ar),
 					null);
-				progress.Report(segment.Results);
+				if (progress != null) {
+					progress.Report(segment.Results);
+				}
+				results.AddRange(segment.Results);
 			} while (segment.HasMoreResults);
+
+			return new ReadOnlyCollection<IListBlobItem>(results);
+		}
+
+		public static async Task<ReadOnlyListOfBlobItem> ListBlobsSegmentedAsync(this CloudBlobDirectory directory, int pageSize, IProgress<IEnumerable<IListBlobItem>> progress = null) {
+			var options = new BlobRequestOptions { BlobListingDetails = BlobListingDetails.Metadata };
+			var results = new List<IListBlobItem>();
+			ResultContinuation continuation = null;
+			ResultSegment<IListBlobItem> segment;
+			do {
+				segment = await Task.Factory.FromAsync(
+					(cb, state) => directory.BeginListBlobsSegmented(pageSize, continuation, options, cb, state),
+					ar => directory.EndListBlobsSegmented(ar),
+					null);
+				if (progress != null) {
+					progress.Report(segment.Results);
+				}
+				results.AddRange(segment.Results);
+			} while (segment.HasMoreResults);
+
+			return new ReadOnlyCollection<IListBlobItem>(results);
 		}
 
 		public static Task DownloadToStreamAsync(this CloudBlob blob, Stream stream) {
