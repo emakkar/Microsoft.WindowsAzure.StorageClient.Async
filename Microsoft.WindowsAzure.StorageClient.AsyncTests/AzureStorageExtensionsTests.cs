@@ -10,7 +10,7 @@
 
 	[TestFixture]
 	public class AzureStorageExtensionsTests {
-		private const string TestContainerName = "unittests";
+		private string testContainerName;
 		private CloudStorageAccount account;
 		private CloudBlobClient blobClient;
 		private CloudBlobContainer blobContainer;
@@ -19,9 +19,16 @@
 		public void Initialize() {
 			CloudStorageAccount.SetConfigurationSettingPublisher(ConfigSetter);
 			this.account = CloudStorageAccount.FromConfigurationSetting("StorageConnectionString");
+
 			this.blobClient = this.account.CreateCloudBlobClient();
-			this.blobContainer = this.blobClient.GetContainerReference(TestContainerName);
+			this.testContainerName = "unittests" + Guid.NewGuid().ToString();
+			this.blobContainer = this.blobClient.GetContainerReference(this.testContainerName);
 			this.blobContainer.CreateIfNotExistAsync().GetAwaiter().GetResult();
+		}
+
+		[TearDown]
+		public void TearDown() {
+			this.blobContainer.Delete();
 		}
 
 		[Test]
@@ -34,7 +41,7 @@
 			const string payload = "Some message";
 			string blobName = GetRandomBlobName();
 			var blob = this.blobContainer.GetBlobReference(blobName);
-			
+
 			var sourceStream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
 			blob.UploadFromStreamAsync(sourceStream).Wait();
 
