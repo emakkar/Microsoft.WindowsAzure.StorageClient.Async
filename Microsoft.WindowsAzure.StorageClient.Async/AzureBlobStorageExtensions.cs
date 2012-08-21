@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="AzureStorageExtensions.cs" company="Andrew Arnott">
+// <copyright file="AzureBlobStorageExtensions.cs" company="Andrew Arnott">
 //     Copyright (c) Andrew Arnott. All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -16,7 +16,7 @@ namespace Microsoft.WindowsAzure.StorageClient {
 	using ReadOnlyListOfBlobItem = System.Collections.Generic.IReadOnlyList<IListBlobItem>;
 #endif
 
-	public static class AzureStorageExtensions {
+	public static class AzureBlobStorageExtensions {
 		public static Task<bool> CreateIfNotExistAsync(this CloudBlobContainer container) {
 			return Task.Factory.FromAsync(
 				(cb, state) => ((CloudBlobContainer)state).BeginCreateIfNotExist(cb, state),
@@ -24,8 +24,8 @@ namespace Microsoft.WindowsAzure.StorageClient {
 				container);
 		}
 
-		public static async Task<ReadOnlyListOfBlobItem> ListBlobsSegmentedAsync(this CloudBlobContainer container, int pageSize, IProgress<IEnumerable<IListBlobItem>> progress = null) {
-			var options = new BlobRequestOptions { BlobListingDetails = BlobListingDetails.Metadata };
+		public static async Task<ReadOnlyListOfBlobItem> ListBlobsSegmentedAsync(this CloudBlobContainer container, int pageSize, BlobRequestOptions options = null, IProgress<IEnumerable<IListBlobItem>> progress = null) {
+			options = options ?? new BlobRequestOptions();
 			var results = new List<IListBlobItem>();
 			ResultContinuation continuation = null;
 			ResultSegment<IListBlobItem> segment;
@@ -38,13 +38,14 @@ namespace Microsoft.WindowsAzure.StorageClient {
 					progress.Report(segment.Results);
 				}
 				results.AddRange(segment.Results);
+				continuation = segment.ContinuationToken;
 			} while (segment.HasMoreResults);
 
 			return new ReadOnlyCollection<IListBlobItem>(results);
 		}
 
-		public static async Task<ReadOnlyListOfBlobItem> ListBlobsSegmentedAsync(this CloudBlobDirectory directory, int pageSize, IProgress<IEnumerable<IListBlobItem>> progress = null) {
-			var options = new BlobRequestOptions { BlobListingDetails = BlobListingDetails.Metadata };
+		public static async Task<ReadOnlyListOfBlobItem> ListBlobsSegmentedAsync(this CloudBlobDirectory directory, int pageSize, BlobRequestOptions options = null, IProgress<IEnumerable<IListBlobItem>> progress = null) {
+			options = options ?? new BlobRequestOptions();
 			var results = new List<IListBlobItem>();
 			ResultContinuation continuation = null;
 			ResultSegment<IListBlobItem> segment;

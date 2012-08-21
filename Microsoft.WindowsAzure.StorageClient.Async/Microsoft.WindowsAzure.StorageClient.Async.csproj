@@ -63,7 +63,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AzureStorageExtensions.cs" />
+    <Compile Include="AzureBlobStorageExtensions.cs" />
+    <Compile Include="AzureTableStorageExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

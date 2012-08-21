@@ -56,7 +56,7 @@
 			var progress = new Progress<IEnumerable<IListBlobItem>>(
 				results => {
 				});
-			this.blobContainer.ListBlobsSegmentedAsync(1, progress).GetAwaiter().GetResult();
+			this.blobContainer.ListBlobsSegmentedAsync(1, progress: progress).GetAwaiter().GetResult();
 		}
 
 		[Test]
