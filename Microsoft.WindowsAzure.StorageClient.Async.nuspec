@@ -10,8 +10,13 @@
 		<description>.NET 4.5 Async-style extensions for Azure Storage APIs.</description>
 		<copyright>Copyright ©  2012</copyright>
 		<dependencies>
-			<dependency id="Microsoft.CompilerServices.AsyncTargetingPack" version="1.0.0" />
-			<dependency id="WindowsAzure.Storage" version="1.7.0.0" />
+			<group>
+				<dependency id="WindowsAzure.Storage" version="1.7.0.0" />
+			</group>
+			<group targetFramework="net40">
+				<dependency id="WindowsAzure.Storage" version="1.7.0.0" />
+				<dependency id="Microsoft.CompilerServices.AsyncTargetingPack" version="1.0.0" />
+			</group>
 		</dependencies>
 	</metadata>
 	<files>
