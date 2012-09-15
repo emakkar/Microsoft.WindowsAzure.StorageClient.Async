@@ -1,27 +1,17 @@
-Validation
-==========
+Windows Azure storage async extensions
+======================================
 
-*Method input validation and runtime checks that report errors or throw
-exceptions when failures are detected.*
+*Adds -Async extension methods to enable use of the convenient C#/VB await
+keywords when calling into Azure storage.*
 
-This project is available as the [Validation][1] NuGet package.
+This project is available as the 
+[Microsoft.WindowsAzure.StorageClient.Async][1] NuGet package.
 
-Basic input validation via the `Requires` class throws an ArgumentException.
+The API that Windows Azure Storage exposes is large, and this project is
+currently under passive development (API is added on an as-needed basis).
+Please consider [forking this project on GitHub][2] to add whatever -Async
+methods that are missing that you want, and sending a pull request to get your
+improvements added to the original project.
 
-	Requires.NotNull(arg1, "arg1");
-	Requires.NotNullOrEmpty(arg2, "arg2");
-
-State validation via the `Verify` class throws an InvalidOperationException.
-
-	Verify.Operation(condition, "some error occurred.");
-
-Internal integrity checks via the `Assumes` class throws an
-InternalErrorException.
-
-	Assumes.True(condition, "some error");
-
-Warning signs that should not throw exceptions via the `Report` class.
-
-	Report.IfNot(condition, "some error");
-
-[1]: http://nuget.org/packages/Validation "Validation NuGet package"
+[1]: http://nuget.org/packages/Microsoft.WindowsAzure.StorageClient.Async "Microsoft.WindowsAzure.StorageClient.Async NuGet package"
+[2]: https://github.com/AArnott/Microsoft.WindowsAzure.StorageClient.Async "GitHub project"
