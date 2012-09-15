@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory), EnlistmentInfo.props))\EnlistmentInfo.props" Condition=" '$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory), EnlistmentInfo.props))' != '' " />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -12,42 +13,17 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\Microsoft.WindowsAzure.StorageClient.Async.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\Microsoft.WindowsAzure.StorageClient.Async.XML</DocumentationFile>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseNET40|AnyCPU'">
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <OutputPath>bin\ReleaseNET40\</OutputPath>
-    <DefineConstants>TRACE;NET40</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
+    <DefineConstants>$(DefineConstants);NET40</DefineConstants>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\ReleaseNET40\Microsoft.WindowsAzure.StorageClient.Async.XML</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Release.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CompilerServices.AsyncTargetingPack.Net4" Condition=" '$(TargetFrameworkVersion)' == 'v4.0' ">
@@ -74,14 +50,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\buildpkg.bat">
-      <Link>buildpkg.bat</Link>
-    </None>
-    <None Include="..\Microsoft.WindowsAzure.StorageClient.Async.nuspec">
-      <Link>Microsoft.WindowsAzure.StorageClient.Async.nuspec</Link>
-    </None>
     <None Include="packages.config" />
-    <None Include="Release.pfx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -91,4 +60,6 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory), EnlistmentInfo.targets))\EnlistmentInfo.targets" Condition=" '$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory), EnlistmentInfo.targets))' != '' " />
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
 </Project>

@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+	<metadata>
+		<id>Microsoft.WindowsAzure.StorageClient.Async</id>
+		<version>$version$</version>
+		<title>Microsoft.WindowsAzure.StorageClient.Async</title>
+		<authors>Andrew Arnott</authors>
+		<owners>Andrew Arnott</owners>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>.NET 4.5 Async-style extensions for Azure Storage APIs.</description>
+		<copyright>Copyright © Andrew Arnott</copyright>
+		<dependencies>
+			<group>
+				<dependency id="WindowsAzure.Storage" version="1.7.0.0" />
+			</group>
+			<group targetFramework="net40">
+				<dependency id="WindowsAzure.Storage" version="1.7.0.0" />
+				<dependency id="Microsoft.CompilerServices.AsyncTargetingPack" version="1.0.0" />
+			</group>
+		</dependencies>
+	</metadata>
+	<files>
+		<file src="$OutputPath45$Microsoft.WindowsAzure.StorageClient.Async.dll" target="lib\net45" />
+		<file src="$OutputPath45$Microsoft.WindowsAzure.StorageClient.Async.pdb" target="lib\net45" />
+		<file src="$OutputPath45$Microsoft.WindowsAzure.StorageClient.Async.xml" target="lib\net45" />
+
+		<file src="$OutputPath40$Microsoft.WindowsAzure.StorageClient.Async.dll" target="lib\net40" />
+		<file src="$OutputPath40$Microsoft.WindowsAzure.StorageClient.Async.pdb" target="lib\net40" />
+		<file src="$OutputPath40$Microsoft.WindowsAzure.StorageClient.Async.xml" target="lib\net40" />
+
+		<file src="..\src\Microsoft.WindowsAzure.StorageClient.Async\**\*.cs" target="src" />
+		<file src="$IntermediatePath$Microsoft.WindowsAzure.StorageClient.Async.Version.cs" target="src\Properties" />
+	</files>
+</package>

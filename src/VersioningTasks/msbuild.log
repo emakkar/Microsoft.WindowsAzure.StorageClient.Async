@@ -1,0 +1,36 @@
+Build started 9/15/2012 7:56:33 AM.
+     1>Project "C:\Users\Andrew\git\Microsoft.WindowsAzure.StorageClient.Async\src\VersioningTasks\VersioningTasks.sln" on node 1 (default targets).
+     1>ValidateSolutionConfiguration:
+         Building solution configuration "release|Any CPU".
+     1>Project "C:\Users\Andrew\git\Microsoft.WindowsAzure.StorageClient.Async\src\VersioningTasks\VersioningTasks.sln" (1) is building "C:\Users\Andrew\git\Microsoft.WindowsAzure.StorageClient.Async\src\VersioningTasks\VersioningTasks.csproj" (2) on node 1 (default targets).
+     2>PrepareForBuild:
+         Creating directory "obj\Release\".
+       GenerateTargetFrameworkMonikerAttribute:
+       Skipping target "GenerateTargetFrameworkMonikerAttribute" because all output files are up-to-date with respect to the input files.
+       CoreCompile:
+         C:\Windows\Microsoft.NET\Framework\v4.0.30319\Csc.exe /noconfig /nowarn:1701,1702 /nostdlib+ /errorreport:prompt /warn:4 /doc:..\..\tools\VersioningTasks.XML /define:TRACE /highentropyva+ /reference:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\Microsoft.Build.dll" /reference:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\Microsoft.Build.Framework.dll" /reference:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\Microsoft.Build.Utilities.v4.0.dll" /reference:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\Microsoft.CSharp.dll" /reference:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\mscorlib.dll" /reference:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.Core.dll" /reference:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.Data.DataSetExtensions.dll" /reference:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.Data.dll" /reference:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.dll" /reference:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.Xml.dll" /reference:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.Xml.Linq.dll" /debug:pdbonly /filealign:512 /optimize+ /out:obj\Release\VersioningTasks.dll /subsystemversion:6.00 /target:library /utf8output CompareFiles.cs GetBuildVersion.cs NuGetPack.cs Properties\AssemblyInfo.cs "C:\Users\Andrew\AppData\Local\Temp\.NETFramework,Version=v4.5.AssemblyAttributes.cs"
+     2>CompareFiles.cs(10,15): warning CS1591: Missing XML comment for publicly visible type or member 'VersioningTasks.CompareFiles' [C:\Users\Andrew\git\Microsoft.WindowsAzure.StorageClient.Async\src\VersioningTasks\VersioningTasks.csproj]
+     2>CompareFiles.cs(35,24): warning CS1591: Missing XML comment for publicly visible type or member 'VersioningTasks.CompareFiles.Execute()' [C:\Users\Andrew\git\Microsoft.WindowsAzure.StorageClient.Async\src\VersioningTasks\VersioningTasks.csproj]
+     2>GetBuildVersion.cs(12,15): warning CS1591: Missing XML comment for publicly visible type or member 'VersioningTasks.GetBuildVersion' [C:\Users\Andrew\git\Microsoft.WindowsAzure.StorageClient.Async\src\VersioningTasks\VersioningTasks.csproj]
+     2>GetBuildVersion.cs(72,24): warning CS1591: Missing XML comment for publicly visible type or member 'VersioningTasks.GetBuildVersion.Execute()' [C:\Users\Andrew\git\Microsoft.WindowsAzure.StorageClient.Async\src\VersioningTasks\VersioningTasks.csproj]
+       CopyFilesToOutputDirectory:
+         Copying file from "obj\Release\VersioningTasks.dll" to "..\..\tools\VersioningTasks.dll".
+         VersioningTasks -> C:\Users\Andrew\git\Microsoft.WindowsAzure.StorageClient.Async\tools\VersioningTasks.dll
+         Copying file from "obj\Release\VersioningTasks.pdb" to "..\..\tools\VersioningTasks.pdb".
+     2>Done Building Project "C:\Users\Andrew\git\Microsoft.WindowsAzure.StorageClient.Async\src\VersioningTasks\VersioningTasks.csproj" (default targets).
+     1>Done Building Project "C:\Users\Andrew\git\Microsoft.WindowsAzure.StorageClient.Async\src\VersioningTasks\VersioningTasks.sln" (default targets).
+
+Build succeeded.
+
+       "C:\Users\Andrew\git\Microsoft.WindowsAzure.StorageClient.Async\src\VersioningTasks\VersioningTasks.sln" (default target) (1) ->
+       "C:\Users\Andrew\git\Microsoft.WindowsAzure.StorageClient.Async\src\VersioningTasks\VersioningTasks.csproj" (default target) (2) ->
+       (CoreCompile target) -> 
+         CompareFiles.cs(10,15): warning CS1591: Missing XML comment for publicly visible type or member 'VersioningTasks.CompareFiles' [C:\Users\Andrew\git\Microsoft.WindowsAzure.StorageClient.Async\src\VersioningTasks\VersioningTasks.csproj]
+         CompareFiles.cs(35,24): warning CS1591: Missing XML comment for publicly visible type or member 'VersioningTasks.CompareFiles.Execute()' [C:\Users\Andrew\git\Microsoft.WindowsAzure.StorageClient.Async\src\VersioningTasks\VersioningTasks.csproj]
+         GetBuildVersion.cs(12,15): warning CS1591: Missing XML comment for publicly visible type or member 'VersioningTasks.GetBuildVersion' [C:\Users\Andrew\git\Microsoft.WindowsAzure.StorageClient.Async\src\VersioningTasks\VersioningTasks.csproj]
+         GetBuildVersion.cs(72,24): warning CS1591: Missing XML comment for publicly visible type or member 'VersioningTasks.GetBuildVersion.Execute()' [C:\Users\Andrew\git\Microsoft.WindowsAzure.StorageClient.Async\src\VersioningTasks\VersioningTasks.csproj]
+
+    4 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.22

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Microsoft.WindowsAzure.StorageClient.AsyncTests")]
+[assembly: AssemblyTitle("VersioningTasks")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Microsoft.WindowsAzure.StorageClient.AsyncTests")]
+[assembly: AssemblyProduct("VersioningTasks")]
 [assembly: AssemblyCopyright("Copyright ©  2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("57d10fe4-b67d-4a66-bf57-446408000335")]
+[assembly: Guid("ac761039-5280-4101-9ce6-039938f9e05e")]
 
 // Version information for an assembly consists of the following four values:
 //
