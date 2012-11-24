@@ -7,9 +7,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.WindowsAzure.Stor
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{6248352D-70AD-4E9C-9596-8B78BAB26887}"
 	ProjectSection(SolutionItems) = preProject
+		..\NuGet\Microsoft.WindowsAzure.StorageClient.Async.nuspec = ..\NuGet\Microsoft.WindowsAzure.StorageClient.Async.nuspec
 		.nuget\NuGet.Config = .nuget\NuGet.Config
 		.nuget\NuGet.exe = .nuget\NuGet.exe
+		..\NuGet\NuGet.proj = ..\NuGet\NuGet.proj
 		.nuget\NuGet.targets = .nuget\NuGet.targets
+		version.txt = version.txt
 	EndProjectSection
 EndProject
 Global
