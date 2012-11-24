@@ -10,7 +10,11 @@ namespace Microsoft.WindowsAzure.StorageClient {
 	using System.Collections.ObjectModel;
 	using System.Linq;
 	using System.Text;
+	using System.Threading;
 	using System.Threading.Tasks;
+	using Microsoft.WindowsAzure.Storage;
+	using Microsoft.WindowsAzure.Storage.Table;
+	using Microsoft.WindowsAzure.Storage.Table.DataServices;
 
 	public static class AzureTableStorageExtensions {
 		/// <summary>
@@ -19,11 +23,11 @@ namespace Microsoft.WindowsAzure.StorageClient {
 		/// <param name="client">The table storage client.</param>
 		/// <param name="tableName">Name of the table.</param>
 		/// <returns>A task that completes when the async operation is finished.</returns>
-		public static Task CreateTableAsync(this CloudTableClient client, string tableName) {
+		public static Task CreateTableAsync(this CloudTable client, string tableName, CancellationToken cancellationToken = default(CancellationToken)) {
 			return Task.Factory.FromAsync(
-				(cb, state) => ((Tuple<CloudTableClient, string>)state).Item1.BeginCreateTable(((Tuple<CloudTableClient, string>)state).Item2, cb, state),
-				ar => ((Tuple<CloudTableClient, string>)ar.AsyncState).Item1.EndCreateTable(ar),
-				Tuple.Create(client, tableName));
+				(cb, state) => ((CloudTable)state).BeginCreate(cb, state).WithCancellation(cancellationToken),
+				ar => ((CloudTable)ar.AsyncState).EndCreate(ar),
+				client);
 		}
 
 		/// <summary>
@@ -32,11 +36,11 @@ namespace Microsoft.WindowsAzure.StorageClient {
 		/// <param name="client">The table storage client.</param>
 		/// <param name="tableName">Name of the table.</param>
 		/// <returns>A task that completes when the async operation is finished.</returns>
-		public static Task CreateTableIfNotExistAsync(this CloudTableClient client, string tableName) {
+		public static Task CreateIfNotExistsAsync(this CloudTable client, CancellationToken cancellationToken = default(CancellationToken)) {
 			return Task.Factory.FromAsync(
-				(cb, state) => ((Tuple<CloudTableClient, string>)state).Item1.BeginCreateTableIfNotExist(((Tuple<CloudTableClient, string>)state).Item2, cb, state),
-				ar => ((Tuple<CloudTableClient, string>)ar.AsyncState).Item1.EndCreateTableIfNotExist(ar),
-				Tuple.Create(client, tableName));
+				(cb, state) => ((CloudTable)state).BeginCreateIfNotExists(cb, state).WithCancellation(cancellationToken),
+				ar => ((CloudTable)ar.AsyncState).EndCreateIfNotExists(ar),
+				client);
 		}
 
 		public static Task SaveChangesAsync(this TableServiceContext tableServiceContext) {
@@ -46,24 +50,21 @@ namespace Microsoft.WindowsAzure.StorageClient {
 				tableServiceContext);
 		}
 
-		public static async Task<ReadOnlyCollection<T>> ExecuteAsync<T>(this CloudTableQuery<T> query, IProgress<IEnumerable<T>> progress = null) {
-			var results = new List<T>();
-			ResultSegment<T> resultSegment;
-			ResultContinuation continuation = null;
+		public static async Task ExecuteQuerySegmentedAsync<T>(this CloudTable table, TableQuery<T> query, IProgress<List<DynamicTableEntity>> progress)
+			where T : ITableEntity, new() {
+			TableQuerySegment<DynamicTableEntity> resultSegment;
+			TableContinuationToken continuation = null;
 			do {
 				resultSegment = await Task.Factory.FromAsync(
-					(cb, state) => query.BeginExecuteSegmented(continuation, cb, state),
-					ar => query.EndExecuteSegmented(ar),
+					(cb, state) => (IAsyncResult)table.BeginExecuteQuerySegmented(query, continuation, cb, state),
+					ar => table.EndExecuteQuerySegmented(ar),
 					null);
 				if (progress != null) {
 					progress.Report(resultSegment.Results);
 				}
 
-				results.AddRange(resultSegment.Results);
 				continuation = resultSegment.ContinuationToken;
-			} while (resultSegment.HasMoreResults);
-
-			return new ReadOnlyCollection<T>(results);
+			} while (continuation != null);
 		}
 	}
 }

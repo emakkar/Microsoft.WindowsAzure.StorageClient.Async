@@ -9,29 +9,40 @@ namespace Microsoft.WindowsAzure.StorageClient {
 	using System.Collections.Generic;
 	using System.Collections.ObjectModel;
 	using System.IO;
+	using System.Threading;
 	using System.Threading.Tasks;
-#if NET40
-	using ReadOnlyListOfBlobItem = System.Collections.ObjectModel.ReadOnlyCollection<IListBlobItem>;
-#else
-	using ReadOnlyListOfBlobItem = System.Collections.Generic.IReadOnlyList<IListBlobItem>;
-#endif
+	using Microsoft.WindowsAzure.Storage;
+	using Microsoft.WindowsAzure.Storage.Blob;
 
 	public static class AzureBlobStorageExtensions {
-		public static Task<bool> CreateIfNotExistAsync(this CloudBlobContainer container) {
+		public static Task<bool> CreateIfNotExistAsync(this CloudBlobContainer container, CancellationToken cancellationToken = default(CancellationToken)) {
 			return Task.Factory.FromAsync(
-				(cb, state) => ((CloudBlobContainer)state).BeginCreateIfNotExist(cb, state),
-				ar => ((CloudBlobContainer)ar.AsyncState).EndCreateIfNotExist(ar),
+				(cb, state) => (IAsyncResult)((CloudBlobContainer)state).BeginCreateIfNotExists(cb, state).WithCancellation(cancellationToken),
+				ar => ((CloudBlobContainer)ar.AsyncState).EndCreateIfNotExists(ar),
 				container);
 		}
 
-		public static async Task<ReadOnlyListOfBlobItem> ListBlobsSegmentedAsync(this CloudBlobContainer container, int pageSize, BlobRequestOptions options = null, IProgress<IEnumerable<IListBlobItem>> progress = null) {
+		public static async Task<ReadOnlyCollection<IListBlobItem>> ListBlobsSegmentedAsync(
+			this CloudBlobContainer container,
+			string prefix,
+			bool useFlatBlobListing,
+			int pageSize,
+			BlobListingDetails details,
+			BlobRequestOptions options,
+			OperationContext operationContext,
+			IProgress<IEnumerable<IListBlobItem>> progress = null,
+			CancellationToken cancellationToken = default(CancellationToken )) {
 			options = options ?? new BlobRequestOptions();
 			var results = new List<IListBlobItem>();
-			ResultContinuation continuation = null;
-			ResultSegment<IListBlobItem> segment;
+			BlobContinuationToken continuation = null;
+			BlobResultSegment segment;
 			do {
+				Task<string> t = null;
+				t.GetAwaiter();
+				await t;
+				AwaitExtensions.GetAwaiter(t);
 				segment = await Task.Factory.FromAsync(
-					(cb, state) => container.BeginListBlobsSegmented(pageSize, continuation, options, cb, state),
+					(cb, state) => container.BeginListBlobsSegmented(prefix, useFlatBlobListing, details, pageSize, continuation, options, operationContext, cb, state).WithCancellation(cancellationToken),
 					ar => container.EndListBlobsSegmented(ar),
 					null);
 				if (progress != null) {
@@ -39,75 +50,78 @@ namespace Microsoft.WindowsAzure.StorageClient {
 				}
 				results.AddRange(segment.Results);
 				continuation = segment.ContinuationToken;
-			} while (segment.HasMoreResults);
+			} while (continuation != null);
 
 			return new ReadOnlyCollection<IListBlobItem>(results);
 		}
 
-		public static async Task<ReadOnlyListOfBlobItem> ListBlobsSegmentedAsync(this CloudBlobDirectory directory, int pageSize, BlobRequestOptions options = null, IProgress<IEnumerable<IListBlobItem>> progress = null) {
-			options = options ?? new BlobRequestOptions();
+		public static async Task<ReadOnlyCollection<IListBlobItem>> ListBlobsSegmentedAsync(
+			this CloudBlobContainer directory,
+			IProgress<IEnumerable<IListBlobItem>> progress = null,
+			CancellationToken cancellationToken = default(CancellationToken)) {
 			var results = new List<IListBlobItem>();
-			ResultContinuation continuation = null;
-			ResultSegment<IListBlobItem> segment;
+			BlobContinuationToken continuation = null;
+			BlobResultSegment segment;
 			do {
 				segment = await Task.Factory.FromAsync(
-					(cb, state) => directory.BeginListBlobsSegmented(pageSize, continuation, options, cb, state),
+					(cb, state) => directory.BeginListBlobsSegmented(continuation, cb, state).WithCancellation(cancellationToken),
 					ar => directory.EndListBlobsSegmented(ar),
 					null);
 				if (progress != null) {
 					progress.Report(segment.Results);
 				}
 				results.AddRange(segment.Results);
-			} while (segment.HasMoreResults);
+				continuation = segment.ContinuationToken;
+			} while (continuation != null);
 
 			return new ReadOnlyCollection<IListBlobItem>(results);
 		}
 
-		public static Task DownloadToStreamAsync(this CloudBlob blob, Stream stream) {
+		public static Task DownloadToStreamAsync(this ICloudBlob blob, Stream stream) {
 			return Task.Factory.FromAsync(
-				(cb, state) => ((Tuple<CloudBlob, Stream>)state).Item1.BeginDownloadToStream(((Tuple<CloudBlob, Stream>)state).Item2, cb, state),
-				ar => ((Tuple<CloudBlob, Stream>)ar.AsyncState).Item1.EndDownloadToStream(ar),
+				(cb, state) => ((Tuple<ICloudBlob, Stream>)state).Item1.BeginDownloadToStream(((Tuple<ICloudBlob, Stream>)state).Item2, cb, state),
+				ar => ((Tuple<ICloudBlob, Stream>)ar.AsyncState).Item1.EndDownloadToStream(ar),
 				Tuple.Create(blob, stream));
 		}
 
-		public static Task UploadFromStreamAsync(this CloudBlob blob, Stream stream) {
+		public static Task UploadFromStreamAsync(this ICloudBlob blob, Stream stream) {
 			return Task.Factory.FromAsync(
-				(cb, state) => ((Tuple<CloudBlob, Stream>)state).Item1.BeginUploadFromStream(((Tuple<CloudBlob, Stream>)state).Item2, cb, state),
-				ar => ((Tuple<CloudBlob, Stream>)ar.AsyncState).Item1.EndUploadFromStream(ar),
+				(cb, state) => ((Tuple<ICloudBlob, Stream>)state).Item1.BeginUploadFromStream(((Tuple<ICloudBlob, Stream>)state).Item2, cb, state),
+				ar => ((Tuple<ICloudBlob, Stream>)ar.AsyncState).Item1.EndUploadFromStream(ar),
 				Tuple.Create(blob, stream));
 		}
 
-		public static Task DeleteAsync(this CloudBlob blob) {
+		public static Task DeleteAsync(this ICloudBlob blob) {
 			return Task.Factory.FromAsync(
-				(cb, state) => ((CloudBlob)state).BeginDelete(cb, state),
-				ar => ((CloudBlob)ar.AsyncState).EndDelete(ar),
+				(cb, state) => ((ICloudBlob)state).BeginDelete(cb, state),
+				ar => ((ICloudBlob)ar.AsyncState).EndDelete(ar),
 				blob);
 		}
 
-		public static Task<bool> DeleteIfExistsAsync(this CloudBlob blob) {
+		public static Task<bool> DeleteIfExistsAsync(this ICloudBlob blob) {
 			return Task.Factory.FromAsync(
-				(cb, state) => ((CloudBlob)state).BeginDeleteIfExists(cb, state),
-				ar => ((CloudBlob)ar.AsyncState).EndDeleteIfExists(ar),
+				(cb, state) => ((ICloudBlob)state).BeginDeleteIfExists(cb, state),
+				ar => ((ICloudBlob)ar.AsyncState).EndDeleteIfExists(ar),
 				blob);
 		}
 
-		public static Task SetMetadataAsync(this CloudBlob blob) {
+		public static Task SetMetadataAsync(this ICloudBlob blob) {
 			return Task.Factory.FromAsync(
-				(cb, state) => ((CloudBlob)state).BeginSetMetadata(cb, state),
-				ar => ((CloudBlob)ar.AsyncState).EndSetMetadata(ar),
+				(cb, state) => ((ICloudBlob)state).BeginSetMetadata(cb, state),
+				ar => ((ICloudBlob)ar.AsyncState).EndSetMetadata(ar),
 				blob);
 		}
 
-		public static Task FetchAttributesAsync(this CloudBlob blob) {
+		public static Task FetchAttributesAsync(this ICloudBlob blob) {
 			return Task.Factory.FromAsync(
-				(cb, state) => ((CloudBlob)state).BeginFetchAttributes(cb, state),
-				ar => ((CloudBlob)ar.AsyncState).EndFetchAttributes(ar),
+				(cb, state) => ((ICloudBlob)state).BeginFetchAttributes(cb, state),
+				ar => ((ICloudBlob)ar.AsyncState).EndFetchAttributes(ar),
 				blob);
 		}
 
-		public static Task SetPermissionsAsync(this CloudBlobContainer container, BlobContainerPermissions permissions, BlobRequestOptions options = null) {
+		public static Task SetPermissionsAsync(this CloudBlobContainer container, BlobContainerPermissions permissions) {
 			return Task.Factory.FromAsync(
-				(cb, state) => container.BeginSetPermissions(permissions, options, cb, state),
+				(cb, state) => container.BeginSetPermissions(permissions, cb, state),
 				ar => container.EndSetPermissions(ar),
 				null);
 		}
