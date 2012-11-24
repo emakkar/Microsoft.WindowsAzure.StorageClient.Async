@@ -35,7 +35,7 @@
 		<DefineConstants>DEBUG;TRACE</DefineConstants>
 	</PropertyGroup>
 
-	<PropertyGroup Condition=" '$(Configuration)' == 'Release' or '$(Configuration)' == 'ReleaseNET40' ">
+	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
 		<DebugType>pdbonly</DebugType>
 		<Optimize>true</Optimize>
 		<DefineConstants>TRACE</DefineConstants>
