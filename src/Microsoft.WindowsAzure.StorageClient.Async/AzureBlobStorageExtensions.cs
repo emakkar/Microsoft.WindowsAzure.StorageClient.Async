@@ -31,7 +31,7 @@ namespace Microsoft.WindowsAzure.StorageClient {
 			BlobRequestOptions options,
 			OperationContext operationContext,
 			IProgress<IEnumerable<IListBlobItem>> progress = null,
-			CancellationToken cancellationToken = default(CancellationToken )) {
+			CancellationToken cancellationToken = default(CancellationToken)) {
 			options = options ?? new BlobRequestOptions();
 			var results = new List<IListBlobItem>();
 			BlobContinuationToken continuation = null;
@@ -57,6 +57,60 @@ namespace Microsoft.WindowsAzure.StorageClient {
 
 		public static async Task<ReadOnlyCollection<IListBlobItem>> ListBlobsSegmentedAsync(
 			this CloudBlobContainer directory,
+			IProgress<IEnumerable<IListBlobItem>> progress = null,
+			CancellationToken cancellationToken = default(CancellationToken)) {
+			var results = new List<IListBlobItem>();
+			BlobContinuationToken continuation = null;
+			BlobResultSegment segment;
+			do {
+				segment = await Task.Factory.FromAsync(
+					(cb, state) => directory.BeginListBlobsSegmented(continuation, cb, state).WithCancellation(cancellationToken),
+					ar => directory.EndListBlobsSegmented(ar),
+					null);
+				if (progress != null) {
+					progress.Report(segment.Results);
+				}
+				results.AddRange(segment.Results);
+				continuation = segment.ContinuationToken;
+			} while (continuation != null);
+
+			return new ReadOnlyCollection<IListBlobItem>(results);
+		}
+
+		public static async Task<ReadOnlyCollection<IListBlobItem>> ListBlobsSegmentedAsync(
+			this CloudBlobDirectory container,
+			bool useFlatBlobListing,
+			int pageSize,
+			BlobListingDetails details,
+			BlobRequestOptions options,
+			OperationContext operationContext,
+			IProgress<IEnumerable<IListBlobItem>> progress = null,
+			CancellationToken cancellationToken = default(CancellationToken)) {
+			options = options ?? new BlobRequestOptions();
+			var results = new List<IListBlobItem>();
+			BlobContinuationToken continuation = null;
+			BlobResultSegment segment;
+			do {
+				Task<string> t = null;
+				t.GetAwaiter();
+				await t;
+				AwaitExtensions.GetAwaiter(t);
+				segment = await Task.Factory.FromAsync(
+					(cb, state) => container.BeginListBlobsSegmented(useFlatBlobListing, details, pageSize, continuation, options, operationContext, cb, state).WithCancellation(cancellationToken),
+					ar => container.EndListBlobsSegmented(ar),
+					null);
+				if (progress != null) {
+					progress.Report(segment.Results);
+				}
+				results.AddRange(segment.Results);
+				continuation = segment.ContinuationToken;
+			} while (continuation != null);
+
+			return new ReadOnlyCollection<IListBlobItem>(results);
+		}
+
+		public static async Task<ReadOnlyCollection<IListBlobItem>> ListBlobsSegmentedAsync(
+			this CloudBlobDirectory directory,
 			IProgress<IEnumerable<IListBlobItem>> progress = null,
 			CancellationToken cancellationToken = default(CancellationToken)) {
 			var results = new List<IListBlobItem>();
