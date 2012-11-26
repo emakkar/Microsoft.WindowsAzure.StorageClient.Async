@@ -50,21 +50,45 @@ namespace Microsoft.WindowsAzure.StorageClient {
 				tableServiceContext);
 		}
 
-		public static async Task ExecuteQuerySegmentedAsync<T>(this CloudTable table, TableQuery<T> query, IProgress<List<DynamicTableEntity>> progress)
+		public static async Task<ReadOnlyCollection<T>> ExecuteQuerySegmentedAsync<T>(this CloudTable table, TableQuery<T> query, IProgress<List<DynamicTableEntity>> progress = null)
 			where T : ITableEntity, new() {
 			TableQuerySegment<DynamicTableEntity> resultSegment;
 			TableContinuationToken continuation = null;
+			var results = new List<T>();
 			do {
 				resultSegment = await Task.Factory.FromAsync(
 					(cb, state) => (IAsyncResult)table.BeginExecuteQuerySegmented(query, continuation, cb, state),
 					ar => table.EndExecuteQuerySegmented(ar),
 					null);
+				results.AddRange(resultSegment.Results.Cast<T>());
 				if (progress != null) {
 					progress.Report(resultSegment.Results);
 				}
 
 				continuation = resultSegment.ContinuationToken;
 			} while (continuation != null);
+
+			return new ReadOnlyCollection<T>(results);
+		}
+
+		public static async Task<ReadOnlyCollection<T>> ExecuteSegmentedAsync<T>(this TableServiceQuery<T> query, IProgress<List<T>> progress = null, CancellationToken cancellationToken = default(CancellationToken)) {
+			TableQuerySegment<T> resultSegment;
+			TableContinuationToken continuation = null;
+			var results = new List<T>();
+			do {
+				resultSegment = await Task.Factory.FromAsync(
+					(cb, state) => query.BeginExecuteSegmented(continuation, cb, state).WithCancellation(cancellationToken),
+					ar => query.EndExecuteSegmented(ar),
+					null);
+				results.AddRange(resultSegment.Results);
+				if (progress != null) {
+					progress.Report(resultSegment.Results);
+				}
+
+				continuation = resultSegment.ContinuationToken;
+			} while (continuation != null);
+
+			return new ReadOnlyCollection<T>(results);
 		}
 	}
 }
