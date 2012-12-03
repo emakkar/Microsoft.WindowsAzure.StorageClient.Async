@@ -37,10 +37,6 @@ namespace Microsoft.WindowsAzure.StorageClient {
 			BlobContinuationToken continuation = null;
 			BlobResultSegment segment;
 			do {
-				Task<string> t = null;
-				t.GetAwaiter();
-				await t;
-				AwaitExtensions.GetAwaiter(t);
 				segment = await Task.Factory.FromAsync(
 					(cb, state) => container.BeginListBlobsSegmented(prefix, useFlatBlobListing, details, pageSize, continuation, options, operationContext, cb, state).WithCancellation(cancellationToken),
 					ar => container.EndListBlobsSegmented(ar),
