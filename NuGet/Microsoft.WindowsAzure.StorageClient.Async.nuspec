@@ -17,9 +17,9 @@
 		</dependencies>
 	</metadata>
 	<files>
-		<file src="$OutputPath$Microsoft.WindowsAzure.StorageClient.Async.dll" target="lib\net40" />
-		<file src="$OutputPath$Microsoft.WindowsAzure.StorageClient.Async.pdb" target="lib\net40" />
-		<file src="$OutputPath$Microsoft.WindowsAzure.StorageClient.Async.xml" target="lib\net40" />
+		<file src="$OutputPath$Microsoft.WindowsAzure.StorageClient.Async.dll" target="lib\net45" />
+		<file src="$OutputPath$Microsoft.WindowsAzure.StorageClient.Async.pdb" target="lib\net45" />
+		<file src="$OutputPath$Microsoft.WindowsAzure.StorageClient.Async.xml" target="lib\net45" />
 
 		<file src="..\src\Microsoft.WindowsAzure.StorageClient.Async\**\*.cs" target="src" />
 		<file src="$IntermediatePath$Microsoft.WindowsAzure.StorageClient.Async.Version.cs" target="src\Properties" />
