@@ -11,9 +11,8 @@
 		<copyright>Copyright © Andrew Arnott</copyright>
 		<dependencies>
 			<group>
-				<dependency id="WindowsAzure.Storage" version="[2.0.1.0,3.0)" />
+				<dependency id="WindowsAzure.Storage" version="[2.0.5.1,3.0)" />
 				<dependency id="Validation" version="[2.0,3.0)" />
-				<dependency id="Microsoft.Bcl.Async" version="1.0.12-beta" />
 			</group>
 		</dependencies>
 	</metadata>
